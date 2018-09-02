@@ -11,13 +11,16 @@ class Game extends React.Component{
         this.handleChange = this.handleChange.bind(this);
     }
 
+    // this function will handle any changes made to the textbox
+    // If the correct answer is submitted, then we move on to the
+    // next problem
     handleChange(event) {
         var num = 8;
         this.setState({value: event.target.value}, () => {
             console.log("this.state: ", this.state);
             if (this.state.value == num.toString()) {
                 console.log("yay!");
-                alert('A name was submitted: ' + this.state.value);
+                alert('Correct: ' + this.state.value);
                 event.preventDefault();
             }
         });
@@ -26,9 +29,6 @@ class Game extends React.Component{
     render(){
         return (
             <div className="Game">
-                <div>
-                    8x1 = <input type="text" name="fname" autoFocus/>
-                </div>
                 <form>
                     <label>
                         8x1 =
@@ -49,9 +49,6 @@ class App extends Component {
               <img src={logo} className="App-logo" alt="logo" />
               <h2>Welcome to React</h2>
             </div>
-            <p className="App-intro">
-              To get started, edit <code>src/App.js</code> and save to reload.
-            </p>
           </div>
           <Game />
       </div>
