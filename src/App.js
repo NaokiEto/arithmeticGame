@@ -4,35 +4,49 @@ import './App.css';
 import './Game.css';
 
 class Game extends React.Component{
+
     constructor(props){
         super(props);
-        this.state = {value: ''};
+
+        this.state = {answer: '', first_num: this.genRand(), second_num: this.genRand(), correct_counter: 0};
 
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    genRand() {
+        return Math.floor(Math.random() * 10);
     }
 
     // this function will handle any changes made to the textbox
     // If the correct answer is submitted, then we move on to the
     // next problem
     handleChange(event) {
-        var num = 8;
-        this.setState({value: event.target.value}, () => {
+        var num = this.state.first_num * this.state.second_num;
+        //this.setState({answer: event.target.value});
+
+        this.setState({answer: event.target.value}, () => {
             console.log("this.state: ", this.state);
-            if (this.state.value == num.toString()) {
-                console.log("yay!");
-                alert('Correct: ' + this.state.value);
-                event.preventDefault();
+            if (this.state.answer === num.toString()) {
+                this.setState({answer: '', first_num: this.genRand(), second_num: this.genRand(), correct_counter: this.state.correct_counter + 1});
+                console.log("yay! " + this.state.correct_counter);
+                
+                //alert('Correct: ' + this.state.answer);
+                //event.preventDefault();
             }
         });
+
     }
 
     render(){
         return (
             <div className="Game">
+                <div id="Counter">
+                Counter: {this.state.correct_counter}
+                </div>
                 <form>
                     <label>
-                        8x1 =
-                        <input type="text" name="name" autoFocus value={this.state.value} onChange={this.handleChange} />
+                        {this.state.first_num}x{this.state.second_num} =
+                        <input type="text" name="name" autoFocus value={this.state.answer} onChange={this.handleChange} />
                     </label>
                 </form>
             </div>
