@@ -15,7 +15,7 @@ class Game extends React.Component{
     }
 
     genRand() {
-        return Math.floor(Math.random() * 10);
+        return Math.floor(Math.random() * 21);
     }
 
     startGame() {
