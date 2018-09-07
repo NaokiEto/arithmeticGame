@@ -8,13 +8,18 @@ class Game extends React.Component{
     constructor(props){
         super(props);
 
-        this.state = {answer: '', first_num: this.genRand(), second_num: this.genRand(), correct_counter: 0};
+        this.state = {start: 0, answer: '', first_num: this.genRand(), second_num: this.genRand(), correct_counter: 0};
 
         this.handleChange = this.handleChange.bind(this);
+        this.startGame = this.startGame.bind(this);
     }
 
     genRand() {
         return Math.floor(Math.random() * 10);
+    }
+
+    startGame() {
+        this.setState({start: 1});
     }
 
     // this function will handle any changes made to the textbox
@@ -38,19 +43,27 @@ class Game extends React.Component{
     }
 
     render(){
-        return (
-            <div className="Game">
-                <div id="Counter">
-                Counter: {this.state.correct_counter}
+        if (!this.state.start) {
+            return (
+                <div className="DivStartGame">
+                    <button className="StartGame" onClick={ () => this.startGame()}>Start</button>
                 </div>
-                <form>
-                    <label>
-                        {this.state.first_num}x{this.state.second_num} =
-                        <input type="text" name="name" autoFocus value={this.state.answer} onChange={this.handleChange} />
-                    </label>
-                </form>
-            </div>
-        )
+            )
+        } else {
+            return (
+                <div className="Game">
+                    <div id="Counter">
+                    Counter: {this.state.correct_counter}
+                    </div>
+                    <form>
+                        <label>
+                            {this.state.first_num}x{this.state.second_num} =
+                            <input type="text" name="name" autoFocus value={this.state.answer} onChange={this.handleChange} />
+                        </label>
+                    </form>
+                </div>
+            )
+        }
     }
 }
 
