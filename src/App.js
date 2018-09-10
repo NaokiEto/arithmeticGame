@@ -3,20 +3,68 @@ import logo from './logo.svg';
 import './App.css';
 import './Game.css';
 
+class Timer extends React.Component {
+
+    render() {
+
+        return(
+            <div>
+                Time left: {this.props.seconds} seconds
+            </div>
+        );
+    }
+}
+
+class Counter extends React.Component {
+
+    render() {
+        return (
+            <div id="Counter">
+                Counter: {this.props.correct_counter}
+            </div>
+        );
+    }
+}
+
 class Game extends React.Component{
 
     constructor(props){
         super(props);
 
-        this.state = {start: 0, answer: '', first_num: this.genRand(), second_num: this.genRand(), correct_counter: 0};
+        this.state = {start: 0, answer: '', first_num: this.genRand(), second_num: this.genRand(), 
+                      correct_counter: 0, seconds: 120};
 
-        this.handleChange = this.handleChange.bind(this);
+        this.timer = 0;
+        this.startTimer = this.startTimer.bind(this);
+        this.countDown = this.countDown.bind(this);
+ 
+       this.handleChange = this.handleChange.bind(this);
         this.startGame = this.startGame.bind(this);
     }
 
     genRand() {
         return Math.floor(Math.random() * 21);
     }
+
+    startTimer() {
+        if (this.timer === 0) {
+          this.timer = setInterval(this.countDown, 1000);
+        }
+    }
+
+    countDown() {
+        // Remove one second, set state so a re-render happens.
+        let seconds = this.state.seconds - 1;
+        this.setState({
+          seconds: seconds,
+        });
+        
+        // Check if we're at zero.
+        if (seconds < 0) { 
+          clearInterval(this.timer);
+        }
+    }
+
 
     startGame() {
         this.setState({start: 1});
@@ -34,12 +82,8 @@ class Game extends React.Component{
             if (this.state.answer === num.toString()) {
                 this.setState({answer: '', first_num: this.genRand(), second_num: this.genRand(), correct_counter: this.state.correct_counter + 1});
                 console.log("yay! " + this.state.correct_counter);
-                
-                //alert('Correct: ' + this.state.answer);
-                //event.preventDefault();
             }
         });
-
     }
 
     render(){
@@ -48,21 +92,34 @@ class Game extends React.Component{
                 <div className="DivStartGame">
                     <button className="StartGame" onClick={ () => this.startGame()}>Start</button>
                 </div>
-            )
-        } else {
+            );
+        } else if (this.state.seconds < 0) {
+            return (
+                <div className="DivEndGame">
+                    Score: {this.state.correct_counter}
+                </div>
+            );
+        }
+        else {
+
+            if (this.timer === 0) {
+              this.timer = setInterval(this.countDown, 1000);
+            }
+
+            console.log("seconds left: " + this.state.seconds);
+
             return (
                 <div className="Game">
-                    <div id="Counter">
-                    Counter: {this.state.correct_counter}
-                    </div>
+                    <Counter correct_counter={this.state.correct_counter} />
                     <form>
                         <label>
                             {this.state.first_num}x{this.state.second_num} =
                             <input type="text" name="name" autoFocus value={this.state.answer} onChange={this.handleChange} />
                         </label>
                     </form>
+                    <Timer seconds={this.state.seconds}/>
                 </div>
-            )
+            );
         }
     }
 }
